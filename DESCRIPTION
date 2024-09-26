@@ -1,0 +1,10 @@
+Package: RelMineR
+Type: Package
+Title: A Package for Relationship Mining from PubMed abstracts using Elasticsearch
+Version: 0.1.0
+Authors@R: person("Imran Shah", email = "shah.imran@epa.gov", role = c("aut", "cre"))
+Description: Tools to mine co-occurrences and perform text mining using Elasticsearch in an R-friendly manner.
+License: MIT
+Imports: httr, jsonlite, stringr, tokenizers, parallel
+LazyData: true
+RoxygenNote: 7.3.2
