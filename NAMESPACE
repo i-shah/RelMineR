@@ -4,6 +4,7 @@ export(build_cooccurrence_query)
 export(count_cooccurrences)
 export(find_rels)
 export(create_term)
+export(find_abstracts)
 
 import(httr)
 import(jsonlite)
