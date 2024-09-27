@@ -4,18 +4,17 @@
 #'
 #' @param A A term list containing the name, synonyms, and class for entity A.
 #' @param B A term list containing the name, synonyms, and class for entity B.
-#' @param index_name Name of the Elasticsearch index.
 #' @param relminer The RelMiner object.
 #' @return A data frame with co-occurrence counts, PMI, and NPMI values.
 #' @export
-find_cooccurrences <- function(A, B, index_name, relminer) {
-  na <- count_occurrences(A$syn, index_name, relminer)
-  nb <- count_occurrences(B$syn, index_name, relminer)
-  n_ab <- count_cooccurrences(A$syn, B$syn, index_name, relminer)
-  total_docs <- count_occurrences(c(""), index_name, relminer) # Total document count
-  
-  pmi <- if (n_ab > 0) log((n_ab * total_docs) / (na * nb)) else 0
-  npmi <- if (n_ab > 0) pmi / -log(n_ab / total_docs) else 0
+find_rel <- function(A, B, relminer) {
+  na <- count_occurrences(A$synonyms,relminer)
+  nb <- count_occurrences(B$synonyms,relminer)
+  n_ab <- count_cooccurrences(A$synonyms, B$synonyms,relminer)
+  total_docs <- count_all_docs(relminer) 
+
+  pmi <- ifelse(n_ab > 0, log2(as.numeric(n_ab) * as.numeric(total_docs) / (as.numeric(na) * as.numeric(nb))), 0)
+  npmi <- ifelse(n_ab > 0, pmi / -log2(as.numeric(n_ab) / as.numeric(total_docs)), 0)
   
   data.frame(
     term_a = A$name,
@@ -25,6 +24,7 @@ find_cooccurrences <- function(A, B, index_name, relminer) {
     count_a = na,
     count_b = nb,
     count_ab = n_ab,
+    count_docs=total_docs,
     pmi = pmi,
     npmi = npmi
   )
@@ -34,18 +34,43 @@ find_cooccurrences <- function(A, B, index_name, relminer) {
 #'
 #' @param terms_A List of terms for entity A.
 #' @param terms_B List of terms for entity B.
-#' @param index_name Name of the Elasticsearch index.
 #' @param relminer The RelMiner object.
 #' @return The count of co-occurrences.
 #' @export
-count_cooccurrences <- function(terms_A, terms_B, index_name, relminer) {
+count_cooccurrences <- function(terms_A, terms_B, relminer) {
   query <- build_cooccurrence_query(terms_A, terms_B)
-  url <- paste0(relminer$es_url, "/", index_name, "/_count")
-  response <- POST(url, body = toJSON(query), encode = "json")
-  content <- fromJSON(content(response, "text", encoding = "UTF-8"))
+
+  url <- paste0(relminer$es_url, "/", relminer$es_index, "/_count")
+  response <- POST(
+      url = url,
+      body = toJSON(query, auto_unbox = TRUE),
+      encode = "json",
+      add_headers("Content-Type" = "application/json")
+    )
+  content <- fromJSON(content(response, "text", encoding = "UTF-8"),
+                     httr::add_headers("Content-Type" = "application/json"))
   content$count
 }
-    
+
+#' Count documents in index
+#'
+#' @param relminer The RelMiner object.
+#' @return The count of co-occurrences.
+#' @export
+count_all_docs <- function(relminer) {
+
+  url <- paste0(relminer$es_url, "/", relminer$es_index, "/_count")
+  response <- POST(
+      url = url,
+      encode = "json",
+      add_headers("Content-Type" = "application/json")
+    )
+  content <- fromJSON(content(response, "text", encoding = "UTF-8"),
+                     httr::add_headers("Content-Type" = "application/json"))
+  content$count
+}
+
+
 #' Build a co-occurrence query
 #'
 #' @param terms_A List of terms for entity A.
@@ -66,28 +91,65 @@ build_cooccurrence_query <- function(terms_A, terms_B) {
 }
                            
 
-#' Function to run find_cooccurrences in parallel
+#' Function to run find_rel in parallel
 #'
 #' @param A A term list containing the name, synonyms, and class for entity A.
 #' @param B A term list containing the name, synonyms, and class for entity B.
-#' @param index_name Name of the Elasticsearch index.
 #' @param relminer The RelMiner object.
 #' @param n_jobs the number of jobs to run in parallel.    
 #' @return A data frame with co-occurrence counts, PMI, and NPMI values.
 #' @export
 
-run_cooccurrences_in_parallel <- function(terms_a, terms_b, index_name, relminer,n_jobs=10) {
-  # Create a function that takes two terms and runs find_cooccurrences
-  cooccurrence_func <- function(A, B) {
-    find_cooccurrences(A, B, index_name, relminer)
-  }
+# find_rels <- function(terms_a, terms_b, relminer) {
+#   Res = list()
+#   for (A in terms_a){
+#     for (B in terms_b){     
+#       R <- find_rel(A, B,relminer)
+#       Res <- c(Res,R)
+#       }
+#     }
 
-   available_cores <- detectCores()
+#   return(Res)
+#   # Combine all results into a single data frame
+#   results_df <- do.call(rbind, results_list)
   
-  # Ensure n_jobs does not exceed the number of available cores
-  if (n_jobs > available_cores) {
-    n_jobs <- available_cores - 1
-  }
+#   # Return the final data frame
+#   results_df
+# }
+
+find_rels <- function(terms_a, terms_b, relminer) {
+  
+  # Prepare combinations of terms_a and terms_b
+  combinations <- expand.grid(terms_a = seq_along(terms_a), terms_b = seq_along(terms_b))
+
+  # Use mclapply to run cooccurrences in parallel
+  results_list <- lapply(seq_len(nrow(combinations)), function(i) {
+    A <- terms_a[[combinations$terms_a[i]]]
+    B <- terms_b[[combinations$terms_b[i]]]
+    find_rel(A, B,relminer)
+  }) 
+
+  # Combine all results into a single data frame
+  results_df <- do.call(rbind, results_list)
+  
+  # Return the final data frame
+  results_df
+}
+
+                           
+                            
+#' Function to run find_rel in parallel
+#'
+#' @param A A term list containing the name, synonyms, and class for entity A.
+#' @param B A term list containing the name, synonyms, and class for entity B.
+#' @param relminer The RelMiner object.
+#' @param n_jobs the number of jobs to run in parallel.    
+#' @return A data frame with co-occurrence counts, PMI, and NPMI values.
+#' @export
+
+find_rels_par <- function(terms_a, terms_b, relminer,n_jobs=10) {
+  available_cores <- detectCores()
+  n_jobs <- ifelse(  n_jobs > available_cores, available_cores-1,n_jobs)
   
   # Prepare combinations of terms_a and terms_b
   combinations <- expand.grid(terms_a = seq_along(terms_a), terms_b = seq_along(terms_b))
@@ -96,14 +158,14 @@ run_cooccurrences_in_parallel <- function(terms_a, terms_b, index_name, relminer
   results_list <- mclapply(seq_len(nrow(combinations)), function(i) {
     A <- terms_a[[combinations$terms_a[i]]]
     B <- terms_b[[combinations$terms_b[i]]]
-    cooccurrence_func(A, B)
-  }, mc.cores = n_jobs) # Use all but one core
+    find_rel(A, B,relminer)
+  }, mc.cores = n_jobs) 
 
   # Combine all results into a single data frame
   results_df <- do.call(rbind, results_list)
-  
+
   # Return the final data frame
-  return(results_df)
+  results_df
 }
 
     

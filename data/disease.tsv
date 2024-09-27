@@ -1,0 +1,6 @@
+name	class	synonyms	Synonyms
+Parkinson's Disease	disease	Parkinson|Parkinson's Disease|Shaking Palsy|Paralysis Agitans|Substantia Nigra Degeneration	['Shaking Palsy', 'Paralysis Agitans', 'Substantia Nigra Degeneration']
+Alzheimer's Disease	disease	Alzheimer's Disease|Senile Dementia|Alzheimer's Dementia|Memory Loss	"['Senile Dementia', ""Alzheimer's Dementia"", 'Memory Loss']"
+Multiple Sclerosis	disease	Multiple Sclerosis|MS|Disseminated Sclerosis|Multiple Sclerosis	['MS', 'Disseminated Sclerosis', 'Multiple Sclerosis']
+Diabetes	disease	Diabetes|Diabetes Mellitus|Sugar Diabetes|Hyperglycemia	['Diabetes Mellitus', 'Sugar Diabetes', 'Hyperglycemia']
+Heart Disease	disease	Heart Disease|Coronary Artery Disease|Cardiovascular Disease|Heart Attack	['Coronary Artery Disease', 'Cardiovascular Disease', 'Heart Attack']

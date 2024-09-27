@@ -6,8 +6,8 @@
 #' @param relminer The RelMiner object.
 #' @return A data frame with sentences containing co-occurrences of A and B.
 #' @export
-find_sentences_with_cooccurrences <- function(A, B, index_name, relminer) {
-  abstracts <- find_abstracts(A, B, index_name, relminer)
+find_sentences_with_cooccurrences <- function(A, B, relminer) {
+  abstracts <- find_abstracts(A, B, relminer$es_index, relminer)
   rx_a <- paste(A$syn, collapse = "|")
   rx_b <- paste(B$syn, collapse = "|")
   

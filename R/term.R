@@ -8,7 +8,7 @@
 create_term <- function(name, syn, class) {
   list(
     name = name,
-    syn = syn,
+    synonyms = syn,
     class = class
   )
 }

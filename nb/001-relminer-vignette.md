@@ -1,0 +1,405 @@
+# RelMinerR 
+In natural language processing (NLP) and text mining, understanding the relationship between two terms can be crucial for tasks such as knowledge extraction, semantic analysis, and information retrieval. For example, you may want to evaluate how strongly two concepts (such as "Cancer" and "TP53") are related across a large corpus of documents by considering their synonyms. This relationship can be quantified by calculating co-occurrences, Pointwise Mutual Information (PMI), and Normalized Pointwise Mutual Information (NPMI). 
+
+
+**RelMineR** is an R package designed to facilitate the discovery of potential biomedical relationships between terms using PMI and NPMI scores. 
+
+**Key Features:**
+
+* **Relationship Quantification:** Employs established metrics like co-occurrences, PMI, and NPMI to measure the strength of relationships between terms.
+* **PubMed Abstraction:** Leverages a pre-built Elasticsearch index of PubMed abstracts to efficiently search for relevant information.
+* **Biomedical Focus:** Tailored to the specific needs of biomedical research, ensuring accurate and meaningful relationship discovery.
+
+**How it Works:**
+
+1. **Elasticsearch Integration:** RelMineR seamlessly connects to a pre-configured Elasticsearch index containing PubMed abstracts.
+3. **Relationship Quantification:** Calculates metrics such as PMI and NPMI to quantify the strength of these relationships.
+4. **API Access:** Provides a user-friendly API that allows researchers to query the system for potential relationships between terms of interest.
+
+**Note:** Detailed instructions for building the Elasticsearch index of PubMed abstracts will be available in a separate GitHub repository.
+
+By utilizing RelMineR, researchers can gain valuable insights into the connections between biomedical concepts, accelerating their understanding of complex biological processes and facilitating the discovery of new knowledge.
+
+
+# Background
+
+## Pointwise Mutual Information (PMI)
+
+PMI is a measure of the association between two terms based on their co-occurrence. It quantifies how much more likely two terms are to co-occur than would be expected by chance. PMI is used widely in the field of information theory and computational linguistics to quantify the strength of association between two terms. It was initially proposed by [Church and Hanks (1990)](https://aclanthology.org/J90-1003.pdf) as a way to measure word associations in corpora.
+
+$$
+\text{PMI}(A, B) = \log \frac{P(A, B)}{P(A) \cdot P(B)}
+$$
+
+Where:
+- \( P(A, B) \) is the probability that both terms \(A\) and \(B\) occur together (co-occurrence).
+- \( P(A) \) is the probability that term \(A\) occurs.
+- \( P(B) \) is the probability that term \(B\) occurs.
+
+## PMI in Terms of Document Counts
+
+When working with document counts in a corpus, PMI can be expressed as:
+
+$$
+\text{PMI}(A, B) = \log \frac{\frac{n_{AB}}{N}}{\left(\frac{n_A}{N}\right) \cdot \left(\frac{n_B}{N}\right)}
+$$
+
+Where:
+- \(n_{AB}\) is the number of documents where both \(A\) and \(B\) occur (co-occurrence).
+- \(n_A\) is the number of documents where \(A\) occurs.
+- \(n_B\) is the number of documents where \(B\) occurs.
+- \(N\) is the total number of documents.
+
+## Normalized Pointwise Mutual Information (nPMI)
+
+nPMI is a normalized version of PMI that scales the values between -1 and 1. It is used to account for the fact that PMI tends to increase with rarer terms. It was first implemented by [Bouma (2009)](https://www.semanticscholar.org/paper/Normalized-(pointwise)-mutual-information-in-Bouma/15218d9c029cbb903ae7c729b2c644c24994c201). 
+
+
+$$
+\text{nPMI}(A, B) = \frac{\text{PMI}(A, B)}{-\log P(A, B)}
+$$
+
+Or in terms of document counts:
+
+$$
+\text{nPMI}(A, B) = \frac{\log \frac{P(A, B)}{P(A) \cdot P(B)}}{-\log P(A, B)}
+$$
+
+Where:
+- \(P(A, B)\) is the probability of co-occurrence of \(A\) and \(B\), as defined above.
+
+## Additional Notes:
+
+- PMI is positive if the two terms co-occur more often than expected by chance, negative if they co-occur less often, and zero if they are independent.
+- nPMI normalizes PMI and ranges from -1 to 1, where:
+  - \(1\) indicates perfect co-occurrence (always occur together).
+  - \(0\) indicates independence (no association).
+  - \(-1\) indicates that the terms never co-occur.
+
+These formulas are essential when analyzing the relationship between terms using co-occurrence data.
+
+## Select application to biomedical research 
+
+### Stress response pathways
+[Chambers et al. (2024)](https://doi.org/10.1021/acs.chemrestox.3c00335.) have used the approach to find chemicals that induce adaptive stress response pathways (SRPs) by applying Pointwise Mutual Information (PMI) and Normalized Pointwise Mutual Information (NPMI), as described in Chambers et al. (2024). SRPs are essential for restoring cellular homeostasis following perturbation, and when disrupted beyond critical thresholds, they can lead to apoptosis, autophagy, or cellular senescence. These pathways are key indicators for therapeutic interventions and biomarkers of toxicity.
+
+## References
+
+[Church, Kenneth, and Patrick Hanks. “Word Association Norms, Mutual Information, and Lexicography.” Computational Linguistics 16, no. 1 (1990): 22–29.](https://aclanthology.org/J90-1003.pdf)
+
+[Bouma, Gerlof. “Normalized (Pointwise) Mutual Information in Collocation Extraction.” Proceedings of GSCL 30 (2009): 31–40.](https://www.semanticscholar.org/paper/Normalized-(pointwise)-mutual-information-in-Bouma/15218d9c029cbb903ae7c729b2c644c24994c201)
+
+[Chambers, Bryant A., Danilo Basili, Laura Word, Nancy Baker, Alistair Middleton, Richard S. Judson, and Imran Shah. “Searching for LINCS to Stress: Using Text Mining to Automate Reference Chemical Curation.” Chemical Research in Toxicology 37, no. 6 (June 17, 2024): 878–93.](https://doi.org/10.1021/acs.chemrestox.3c00335.)
+
+
+
+
+# Use-cases
+
+## Relationship between any two terms 
+
+You want to evaluate how strongly two concepts (such as "Cancer" and "TP53") are related across a large corpus of documents. 
+
+1. Create an list to store relevant information to connect to the ElasticSearch server running on localhost at port 9200. 
+
+
+
+```R
+RM0 <- create_relminer(host='localhost',port = 9200,index='pubmed')
+
+```
+
+2. Use the `count_occurrence` function to count the number of abstracts with Cancer or TP53
+
+
+```R
+count_occurrences(terms = c('Cancer'),relminer = RM0)
+```
+
+
+1522097
+
+
+
+```R
+count_occurrences(terms = c('TP53'),relminer = RM0)
+```
+
+
+16073
+
+
+3. Use the `count_cooccurrence` function to count the number of abstracts with Cancer and TP53
+
+
+```R
+count_cooccurrences(terms_A = c('Cancer'),terms_B=c('TP53'),relminer = RM0)
+```
+
+
+8884
+
+
+4. Use the `count_cooccurrence` function to count the number of abstracts with Cancer and TP53 as well as their potential synonyms
+
+
+```R
+count_cooccurrences(terms_A = c('Cancer','neoplasia','neoplasm'),terms_B=c('TP53','P53'),relminer = RM0)
+```
+
+
+44707
+
+
+Using synonyms in information retrieval or text mining helps you get more hits because different terms or expressions can refer to the same concept. In scientific literature, common names, abbreviations, or alternate descriptions are frequently used to refer to the same entity, such as genes, chemicals, or diseases. By incorporating synonyms, you broaden the scope of the search and increase the likelihood of matching relevant documents.
+
+5. Calculate the PMI and NPMI using the `find_rels` function, which require the terms to be structured as named list
+
+
+```R
+gene <- create_term('p53',c('P53','TP53'),'gene')
+disease <- create_term('Cancer',c('Cancer','neoplasia','neoplasm'),'disease')
+
+find_rel(gene,disease,relminer = RM0)
+```
+
+
+<table class="dataframe">
+<caption>A data.frame: 1 × 10</caption>
+<thead>
+	<tr><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
+	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><td>p53</td><td>Cancer</td><td>gene</td><td>disease</td><td>95237</td><td>1572923</td><td>44707</td><td>20688473</td><td>2.626286</td><td>0.2966177</td></tr>
+</tbody>
+</table>
+
+
+
+
+### Explanation of the find_rels output:-
+
+This represents the **co-occurrence analysis** between two terms, in this case **p53** and **Cancer**, across a PubMed abstracts documents. The columns in the `data.frame` contain various statistics about the terms' individual occurrences, their joint occurrences, and measures of their association based on co-occurrence analysis.
+
+#### Column Descriptions:
+- **`term_a`**: The first term in the analysis **p53**
+  
+- **`term_b`**: The second term in the analysis **Cancer**
+
+- **`class_a`**: The category or class to which `term_a` belongs. Here, `p53` is defined (by the user) as a **gene**.
+
+- **`class_b`**: The category or class to which `term_b` belongs. Here, `Cancer` is classified as a **disease**.
+
+- **`count_a`**: The total number of documents in the corpus where `term_a` (p53) occurs. In this case, **95,237** documents mention p53.
+
+- **`count_b`**: The total number of documents in the corpus where `term_b` (Cancer) occurs. In this case, **1,572,923** documents mention Cancer.
+
+- **`count_ab`**: The total number of documents where both `term_a` (p53) and `term_b` (Cancer) co-occur together. In this case, **44,707** documents mention both p53 and Cancer.
+- **`count_docs`**: The total number of abstracts in the index
+
+- **`pmi`**: The **Pointwise Mutual Information (PMI)** score, which measures the strength of association between `term_a` and `term_b` based on their co-occurrence. A higher PMI score indicates that the two terms co-occur more often than would be expected by chance. In this case, the PMI score of **2.626286** suggests that p53 and Cancer co-occur more frequently than random chance would suggest.
+
+- **`npmi`**: The **Normalized Pointwise Mutual Information (NPMI)** score, which normalizes the PMI score to a value between -1 and 1. An NPMI value closer to **1** indicates a strong positive association (the terms frequently co-occur), **0** indicates independence (the terms occur together at random), and **-1** indicates a strong negative association (the terms never co-occur). In this case, the NPMI score of **0.2966177** suggests a moderate positive association between p53 and Cancer.
+
+### Interpretation:
+- The data suggests that **p53** (a gene) and **Cancer** (a disease) co-occur in **44,707** documents out of a corpus, with **95,237** documents mentioning p53 and **1,572,923** mentioning Cancer.
+- The **PMI score of 2.63** indicates that p53 and Cancer co-occur more frequently than expected by chance.
+- The **NPMI score of 0.30** suggests a moderate association between the two terms, meaning that p53 is frequently mentioned in the context of Cancer in the documents analyzed.
+
+This suggests a potential relationship between the gene **p53** and **Cancer**, providing insights into how often they co-occur and how strongly they are associated in the analyzed corpus of documents. 
+
+
+## Relationships between chemicals and diseases
+
+This second use case aims to uncover relationships between thousands of chemicals and hundreds of diseases by leveraging co-occurrence analysis and statistical association measures PMI and NPMI. This task is a littler more involved due to the scale of the input terms.
+
+
+
+1. Load chemicals and store them in a list
+
+
+```R
+Chems <- read.csv("../data/chem.tsv",sep='\t',quote="\"")
+#save(Chems, file = "../data/chems.rda")
+```
+
+
+```R
+Chems[sample(1:nrow(Chems),1),]
+```
+
+
+<table class="dataframe">
+<caption>A data.frame: 1 × 3</caption>
+<thead>
+	<tr><th></th><th scope=col>name</th><th scope=col>class</th><th scope=col>synonyms</th></tr>
+	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>39</th><td>Chlorpromazine hydrochloride</td><td>chemical</td><td>1329612-87-4|NSC 17479|DTXCID404827|Chlorpromazine hydrochloride, United States Pharmacopeia (USP) Reference Standard|CHLORPROMAZINE HYDROCHLORIDE [USP MONOGRAPH]|[3-(2-Chloro-10H-phenothiazin-10-yl)propyl]-dimethylamine hydrochloride|C17H19ClN2S.ClH|Tox21_500249|Chlorpromazine Hcl Intensol|CAS-69-09-0|Chlorpromazine, Hydrochloride|Chlorpromazine hydrochloride, &gt;=98% (TLC)|C2481|C 8138|Propaphenin hydrochloride|69-09-0 (HCl)|NCGC00093711-02|Chlorpromazine hydrochloride [USAN:BAN:JAN]|Chloractil|CHLORPROMAZINE HYDROCHLORIDE [EP IMPURITY]|chlorpromazinhydrochlorid-|CHLORPROMAZINI HYDROCHLORIDUM [WHO-IP LATIN]|2-Chloro-10-(3-(dimethylamino)propyl)phenothiazine monohydrochloride|Phenothiazine hydrochloride|Chlorpromazine hydrochloride, meets USP testing specifications|10H-Phenothiazine-10-propanamine, 2-chloro-N,N-dimethyl-, hydrochloride (1:1)|NC00552|NCGC00093711-01|HY-B0407A|4560 Rp hydrochloride|AI3-28023|Z104477466|CHLORPROMAZINE HYDROCHLORIDE [USP-RS]|Chloropromazine hcl|Phenothiazine, 2-chloro-10-(3-(dimethylamino)propyl)-, monohydrochloride|s2456|2-Chloro-10-(3-dimethylaminopropyl)phenothiazine monohydrochloride|AKOS005111082|WLN: T C666 BN ISJ B3N1&amp;1 EG &amp;GH|CHLORPROMAZINE HYDROCHLORIDE [ORANGE BOOK]|Propaphen|MLS002222157|C-165|Fenactil monohydrochloride|10-(3-Dimethylaminopropyl)-2-chlorophenothiazine monohydrochloride|CHLORPROMAZINE HYDROCHLORIDE [JAN]|CHLORPROMAZINE HYDROCHLORIDE [WHO-IP]|[3-(2-chloro-10H-phenothiazin-10-yl)propyl]dimethylamine hydrochloride|Neurazine|Chlorpromazine Hcl|EU-0100249|69-09-0|UNII-9WP59609J6|Chlorpromazine, Hydrochloride - CAS 69-09-0|Aminazinum|BCP30284|Chlorpromazine hydrochloride, 98%|Chlorpromazini hydrochloridum|CHEBI:3649|AC-10573|Sonazine|Chlorpromazine hydrochloride [USP:BAN:JAN]|Chlorpromazine hydrochloride (JP17/USP)|D00789|Lomazine|Chlorpromazine (hydrochloride)|Chlorpromazine Hydrochloride Intensol|Chlorpromazine hydrochloride, European Pharmacopoeia (EP) Reference Standard|MLS000069401|2-Chloro-10-[3-(dimethylamino)propyl]phenothiazine monohydrochloride|CPZ (VAN)|Largaktyl|AC1LCWF1|SCHEMBL41771|Chlorpromazinium chloride|9WP59609J6|Promapar|7-[Diethylamino]coumarin-3-carbonylazide|SR-01000000012-2|Taroctyl|Opera_ID_1294|CHLOROPROMAZINE HYDROCHLORIDE|NCGC00260934-01|FT-0623715|CHLORPROMAZINE HYDROCHLORIDE [MART.]|Chlorpromazine Hydrochloride 1.0 mg/ml in Methanol (as free base)|Promacid|Chlorpromazine monohydrochloride|LS-1585|NCGC00180973-01|Hebanil|HMS1568M09|MLS-0090820.0001|Q27106159|Klorpromex|CCRIS 6221|Klorproman|Marazine|D89519|Q-200842|NSC-17479|2-Chloro-10-(3-dimethylaminopropyl)phenothiazine hydrochloride|SR-01000000012|Tox21_300517|10H-phenothiazine-10-propanamine hydrochloride, 2-chloro-N,N-dimethyl-|Unitensen|Hibanil|CHLORPROMAZINE HYDROCHLORIDE [EP MONOGRAPH]|3-(2-chlorophenothiazin-10-yl)-N,N-dimethylpropan-1-amine;hydrochloride.|Aminazinum (for the hydrochloride)|Promexin|EINECS 200-701-3|Chlorpromazine chloride|NSC226514|CHLORPROMAZINE HYDROCHLORIDE [WHO-DD]|Chlorpromazine hydrochloride, VETRANAL(TM), analytical standard|C07952|Chloropromazin hydrochloride|Ampliactil monohydrochloride|2-chloro-10-(3-dimethylaminopropyl) phenothiazine hydrochloride|Thorazine hydrochloride|EN300-20245|CCG-221553|Chlorpromazine hydrochloride|Megatil|NCI-C05210|CHLORPROMAZINE HYDROCHLORIDE [VANDF]|DTXSID7024827|FBSMERQALIEGJT-UHFFFAOYSA-N|NCGC00024409-09|CHLORPROMAZINE HYDROCHLORIDE [MI]|Tranzine|Contomin hydrochloride|CCG-220064|SW196373-5|Chloropromazine monohydrochloride|SMR000058254|FT-0665009|CHEMBL1713|NCGC00254272-01|MFCD00012654|Chlorpromazine-13C,d3 Hydrochloride|NSC17479|2-Chloro-10-[3-(dimethylamino)-1-propyl]phenothiazine Hydrochloride|Chlorpromazin-d6 hydrochloride|Norcozine|Megaphen hydrochloride|Aminazin monohydrochloride|Hybernal|Sonazine (TN)|MLS001148603|Plegomazin|Largactil monohydrochloride|10H-Phenothiazine-10-propanamine, 2-chloro-N,N-dimethyl-, monohydrochloride|3-(2-chlorophenothiazin-10-yl)-N,N-dimethylpropan-1-amine;hydrochloride|LP00249|Promachel|SR-01000000012-9|3-(2-chloro-10H-phenothiazin-10-yl)-N,N-dimethylpropan-1-amine hydrochloride|CHLORPROMAZINE HYDROCHLORIDE [GREEN BOOK]|Prestwick_58</td></tr>
+</tbody>
+</table>
+
+
+
+
+```R
+create_entity_from_row <- function(row) {
+  list(
+    name = row["name"],
+    class = row["class"],
+    synonyms = strsplit(row["synonyms"], "\\|")[[1]]  # Split synonyms by '|'
+  )
+}
+
+```
+
+
+```R
+chem_ents <- apply(Chems, 1, create_entity_from_row)
+```
+
+2. Load diseases
+
+
+```R
+Diseases <- read.csv("../data/disease.tsv",sep='\t',quote="\"")
+```
+
+
+```R
+Diseases
+```
+
+
+<table class="dataframe">
+<caption>A data.frame: 5 × 4</caption>
+<thead>
+	<tr><th scope=col>name</th><th scope=col>class</th><th scope=col>synonyms</th><th scope=col>Synonyms</th></tr>
+	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><td>Parkinson's Disease</td><td>disease</td><td>Parkinson|Parkinson's Disease|Shaking Palsy|Paralysis Agitans|Substantia Nigra Degeneration</td><td>['Shaking Palsy', 'Paralysis Agitans', 'Substantia Nigra Degeneration']</td></tr>
+	<tr><td>Alzheimer's Disease</td><td>disease</td><td>Alzheimer's Disease|Senile Dementia|Alzheimer's Dementia|Memory Loss                       </td><td>['Senile Dementia', "Alzheimer's Dementia", 'Memory Loss']             </td></tr>
+	<tr><td>Multiple Sclerosis </td><td>disease</td><td>Multiple Sclerosis|MS|Disseminated Sclerosis|Multiple Sclerosis                            </td><td>['MS', 'Disseminated Sclerosis', 'Multiple Sclerosis']                 </td></tr>
+	<tr><td>Diabetes           </td><td>disease</td><td>Diabetes|Diabetes Mellitus|Sugar Diabetes|Hyperglycemia                                    </td><td>['Diabetes Mellitus', 'Sugar Diabetes', 'Hyperglycemia']               </td></tr>
+	<tr><td>Heart Disease      </td><td>disease</td><td>Heart Disease|Coronary Artery Disease|Cardiovascular Disease|Heart Attack                  </td><td>['Coronary Artery Disease', 'Cardiovascular Disease', 'Heart Attack']  </td></tr>
+</tbody>
+</table>
+
+
+
+
+```R
+dis_ents <- apply(Diseases, 1, create_entity_from_row)
+```
+
+3. Count all cooccurrences
+
+
+```R
+R1 <- find_rels(chem_ents[20:30],dis_ents,RM0)
+```
+
+
+```R
+head(R1)
+```
+
+
+<table class="dataframe">
+<caption>A data.frame: 6 × 10</caption>
+<thead>
+	<tr><th></th><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
+	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>name</th><td>Ethylene thiourea </td><td>Parkinson's Disease</td><td>chemical</td><td>disease</td><td>  277</td><td>92166</td><td>  1</td><td>20688473</td><td>-0.3033654</td><td>-0.01248298</td></tr>
+	<tr><th scope=row>name1</th><td>Cyfluthrin        </td><td>Parkinson's Disease</td><td>chemical</td><td>disease</td><td>  611</td><td>92166</td><td>  0</td><td>20688473</td><td> 0.0000000</td><td> 0.00000000</td></tr>
+	<tr><th scope=row>name2</th><td>Tretinoin         </td><td>Parkinson's Disease</td><td>chemical</td><td>disease</td><td>23805</td><td>92166</td><td>126</td><td>20688473</td><td> 0.2486797</td><td> 0.01435377</td></tr>
+	<tr><th scope=row>name3</th><td>Diethylstilbestrol</td><td>Parkinson's Disease</td><td>chemical</td><td>disease</td><td> 2295</td><td>92166</td><td>  3</td><td>20688473</td><td>-1.7689391</td><td>-0.07786728</td></tr>
+	<tr><th scope=row>name4</th><td>Dieldrin          </td><td>Parkinson's Disease</td><td>chemical</td><td>disease</td><td> 1364</td><td>92166</td><td> 49</td><td>20688473</td><td> 3.0114587</td><td> 0.16114731</td></tr>
+	<tr><th scope=row>name5</th><td>Flubendiamide     </td><td>Parkinson's Disease</td><td>chemical</td><td>disease</td><td>  174</td><td>92166</td><td>  0</td><td>20688473</td><td> 0.0000000</td><td> 0.00000000</td></tr>
+</tbody>
+</table>
+
+
+
+4. Visualize the distribution of hits by disease
+
+
+```R
+library(ggplot2)
+
+# Assuming your data.frame is named df, which contains the columns as described
+
+# Create the ggplot with fixed number of bins and x-axis range from -1 to 1
+ggplot(R1, aes(x = npmi)) +
+  geom_histogram(bins = 30, fill = "skyblue", color = "black", alpha = 0.7) +  # 30 bins, adjust as needed
+  facet_wrap(~ term_b, scales = "free_y") +  # Facet by term_b, free y-axis scaling
+  scale_x_continuous(limits = c(-0.25, 0.25)) +  # Set x-axis range from -1 to 1
+  labs(title = "Distribution of NPMI by Term B",
+       x = "NPMI",
+       y = "Count") +
+  theme_minimal() +
+  theme(strip.text = element_text(size = 12))  # Customize facet label size
+
+```
+
+    Warning message:
+    “[1m[22mRemoved 10 rows containing missing values or values outside the scale range
+    (`geom_bar()`).”
+
+
+
+    
+![png](001-relminer-vignette_files/001-relminer-vignette_30_1.png)
+    
+
+
+5. Pick the top hits for each disease
+
+
+```R
+subset(R1,npmi>0.1)
+```
+
+
+<table class="dataframe">
+<caption>A data.frame: 8 × 10</caption>
+<thead>
+	<tr><th></th><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
+	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>name4</th><td>Dieldrin         </td><td>Parkinson's Disease</td><td>chemical</td><td>disease</td><td>1364</td><td> 92166</td><td>49</td><td>20688473</td><td>3.011459</td><td>0.1611473</td></tr>
+	<tr><th scope=row>name10</th><td>Buspirone        </td><td>Parkinson's Disease</td><td>chemical</td><td>disease</td><td>1199</td><td> 92166</td><td>32</td><td>20688473</td><td>2.582761</td><td>0.1338057</td></tr>
+	<tr><th scope=row>name22</th><td>Ethylene thiourea</td><td>Multiple Sclerosis </td><td>chemical</td><td>disease</td><td> 277</td><td>352860</td><td>27</td><td>20688473</td><td>2.514733</td><td>0.1286477</td></tr>
+	<tr><th scope=row>name23</th><td>Cyfluthrin       </td><td>Multiple Sclerosis </td><td>chemical</td><td>disease</td><td> 611</td><td>352860</td><td>54</td><td>20688473</td><td>2.373446</td><td>0.1279663</td></tr>
+	<tr><th scope=row>name26</th><td>Dieldrin         </td><td>Multiple Sclerosis </td><td>chemical</td><td>disease</td><td>1364</td><td>352860</td><td>92</td><td>20688473</td><td>1.983521</td><td>0.1115669</td></tr>
+	<tr><th scope=row>name27</th><td>Flubendiamide    </td><td>Multiple Sclerosis </td><td>chemical</td><td>disease</td><td> 174</td><td>352860</td><td>13</td><td>20688473</td><td>2.131084</td><td>0.1034412</td></tr>
+	<tr><th scope=row>name29</th><td>Chlordecone      </td><td>Multiple Sclerosis </td><td>chemical</td><td>disease</td><td> 224</td><td>352860</td><td>17</td><td>20688473</td><td>2.153695</td><td>0.1065402</td></tr>
+	<tr><th scope=row>name31</th><td>Picoxystrobin    </td><td>Multiple Sclerosis </td><td>chemical</td><td>disease</td><td>  59</td><td>352860</td><td>19</td><td>20688473</td><td>4.238872</td><td>0.2113687</td></tr>
+</tbody>
+</table>
+
+
+
+
+
+6. Interpretation
+There is evidence linking **dieldrin** and **buspirone** to Parkinson's disease, although the relationships are different in nature.
+
+**Dieldrin and Parkinson's Disease**:
+   Dieldrin is a pesticide that has been studied for its neurotoxic effects, particularly in relation to Parkinson's disease (PD). [Research](https://academic.oup.com/toxsci/article/196/1/99/7247543) shows that exposure to dieldrin can contribute to the degeneration of dopaminergic neurons, which is a hallmark of Parkinson's disease. Animal studies have demonstrated that dieldrin exposure increases the release of dopamine and can induce neurodegeneration, potentially triggering or exacerbating Parkinsonian symptoms.
+
+
+ **Buspirone and Parkinson's Disease**:
+   Buspirone is an anti-anxiety medication often prescribed for generalized anxiety disorder. It has been tested in clinical trials to assess its effectiveness in treating anxiety in Parkinson’s patients. Although buspirone has shown some efficacy in reducing anxiety in individuals with Parkinson's, its tolerability is a concern. [In a Phase II trial, 53% of patients experienced worsening motor symptoms while on buspirone, and a significant portion of patients discontinued the medication due to side effects](https://www.sciencedirect.com/science/article/abs/pii/S1353802020308117#!).
+
+
+
+```R
+
+```

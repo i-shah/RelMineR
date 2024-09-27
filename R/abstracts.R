@@ -2,13 +2,12 @@
 #'
 #' @param A A term list containing the name, synonyms, and class for entity A.
 #' @param B A term list containing the name, synonyms, and class for entity B.
-#' @param index_name Name of the Elasticsearch index.
 #' @param relminer The RelMiner object.
 #' @return A data frame of abstracts containing co-occurrences of A and B.
 #' @export
-find_abstracts <- function(A, B, index_name, relminer) {
+find_abstracts <- function(A, B, relminer) {
   query <- build_cooccurrence_query(A$syn, B$syn)
-  url <- paste0(relminer$es_url, "/", index_name, "/_search")
+  url <- paste0(relminer$es_url, "/", relminer$es_index, "/_search")
   
   response <- POST(url, body = toJSON(query), encode = "json", query = list(scroll = '1m', size = 50))
   results <- fromJSON(content(response, "text", encoding = "UTF-8"))
