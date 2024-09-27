@@ -9,8 +9,15 @@ find_abstracts <- function(A, B, relminer) {
   query <- build_cooccurrence_query(A$syn, B$syn)
   url <- paste0(relminer$es_url, "/", relminer$es_index, "/_search")
   
-  response <- POST(url, body = toJSON(query), encode = "json", query = list(scroll = '1m', size = 50))
-  results <- fromJSON(content(response, "text", encoding = "UTF-8"))
+  response <- POST(url=url, 
+                   body = toJSON(query,auto_unbox=TRUE), 
+                   encode = "json", 
+                   query = list(scroll = '1m', size = 50),
+                   add_headers("Content-Type" = "application/json")
+                  )
+  
+  results <- fromJSON(content(response, "text", encoding = "UTF-8"),
+                     httr::add_headers("Content-Type" = "application/json"))
   scroll_id <- results$`_scroll_id`
   hits <- results$hits$hits
   
