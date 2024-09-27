@@ -9,7 +9,8 @@ create_relminer(
   port = 9200,
   user = NULL,
   passwd = NULL,
-  rels = NULL
+  rels = NULL,
+  index = "pubmed"
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ create_relminer(
 \item{passwd}{Elasticsearch password (default: NULL).}
 
 \item{rels}{A named list of relationships and their corresponding actions.}
+
+\item{index}{Elasticsearch index (default: pubmed).}
 }
 \value{
 A list representing the RelMiner object.

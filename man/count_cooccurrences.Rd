@@ -4,14 +4,12 @@
 \alias{count_cooccurrences}
 \title{Count co-occurrences of two sets of terms}
 \usage{
-count_cooccurrences(terms_A, terms_B, index_name, relminer)
+count_cooccurrences(terms_A, terms_B, relminer)
 }
 \arguments{
 \item{terms_A}{List of terms for entity A.}
 
 \item{terms_B}{List of terms for entity B.}
-
-\item{index_name}{Name of the Elasticsearch index.}
 
 \item{relminer}{The RelMiner object.}
 }

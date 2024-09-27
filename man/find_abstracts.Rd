@@ -4,14 +4,12 @@
 \alias{find_abstracts}
 \title{Retrieve abstracts containing co-occurrences of entity A and B}
 \usage{
-find_abstracts(A, B, index_name, relminer)
+find_abstracts(A, B, relminer)
 }
 \arguments{
 \item{A}{A term list containing the name, synonyms, and class for entity A.}
 
 \item{B}{A term list containing the name, synonyms, and class for entity B.}
-
-\item{index_name}{Name of the Elasticsearch index.}
 
 \item{relminer}{The RelMiner object.}
 }

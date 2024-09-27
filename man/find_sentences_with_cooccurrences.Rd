@@ -4,16 +4,16 @@
 \alias{find_sentences_with_cooccurrences}
 \title{Find sentences with co-occurrences of A and B}
 \usage{
-find_sentences_with_cooccurrences(A, B, index_name, relminer)
+find_sentences_with_cooccurrences(A, B, relminer)
 }
 \arguments{
 \item{A}{A term list containing the name, synonyms, and class for entity A.}
 
 \item{B}{A term list containing the name, synonyms, and class for entity B.}
 
-\item{index_name}{Name of the Elasticsearch index.}
-
 \item{relminer}{The RelMiner object.}
+
+\item{index_name}{Name of the Elasticsearch index.}
 }
 \value{
 A data frame with sentences containing co-occurrences of A and B.

@@ -4,12 +4,10 @@
 \alias{count_occurrences}
 \title{Count occurrences of a list of terms in an Elasticsearch index}
 \usage{
-count_occurrences(terms, index_name, relminer)
+count_occurrences(terms, relminer)
 }
 \arguments{
 \item{terms}{List of terms to search for.}
-
-\item{index_name}{Name of the Elasticsearch index.}
 
 \item{relminer}{The RelMiner object.}
 }
