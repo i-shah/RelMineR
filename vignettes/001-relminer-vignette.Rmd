@@ -1,7 +1,12 @@
 ---
-title: "Converted Jupyter Notebook"
-output: html_document
----
+title: "RelMineR Vignette 1"
+author: "Imran Shah"
+date: "2024-9-28"
+output: jupyter 
+vignette: >
+  %\VignetteIndexEntry{RelMineR Vignette}
+  %\VignetteEncoding{UTF-8}
+------
 
 ```{r}
 #library(RelMineR)
