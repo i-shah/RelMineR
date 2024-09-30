@@ -91,16 +91,16 @@ Where:
 
 [Chambers, Bryant A., Danilo Basili, Laura Word, Nancy Baker, Alistair Middleton, Richard S. Judson, and Imran Shah. “Searching for LINCS to Stress: Using Text Mining to Automate Reference Chemical Curation.” Chemical Research in Toxicology 37, no. 6 (June 17, 2024): 878–93.](https://doi.org/10.1021/acs.chemrestox.3c00335.)
 
-## Installation
+# Installation
 
 You can install the development version from GitHub:
 
-```r
 # install.packages("devtools")
+```r
 devtools::install_github("https://github.com/i-shah/relminer.git")
+```
 
-
-# Use-cases
+# Usage
 
 ## Relationship between any two terms 
 
@@ -111,6 +111,7 @@ You want to evaluate how strongly two concepts (such as "Cancer" and "TP53") are
 
 
 ```R
+library(RelMineR)
 RM0 <- create_relminer(host='localhost',port = 9200,index='pubmed')
 
 ```
@@ -121,8 +122,6 @@ RM0 <- create_relminer(host='localhost',port = 9200,index='pubmed')
 ```R
 count_occurrences(terms = c('Cancer'),relminer = RM0)
 ```
-
-
 1522097
 
 
@@ -171,7 +170,6 @@ find_rel(gene,disease,relminer = RM0)
 
 
 <table class="dataframe">
-<caption>A data.frame: 1 × 10</caption>
 <thead>
 	<tr><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
 	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
@@ -237,13 +235,12 @@ Chems[sample(1:nrow(Chems),1),]
 
 
 <table class="dataframe">
-<caption>A data.frame: 1 × 3</caption>
 <thead>
 	<tr><th></th><th scope=col>name</th><th scope=col>class</th><th scope=col>synonyms</th></tr>
 	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
 </thead>
 <tbody>
-	<tr><th scope=row>39</th><td>Chlorpromazine hydrochloride</td><td>chemical</td><td>1329612-87-4|NSC 17479|DTXCID404827|Chlorpromazine hydrochloride, United States Pharmacopeia (USP) Reference Standard|CHLORPROMAZINE HYDROCHLORIDE [USP MONOGRAPH]|[3-(2-Chloro-10H-phenothiazin-10-yl)propyl]-dimethylamine hydrochloride|C17H19ClN2S.ClH|Tox21_500249|Chlorpromazine Hcl Intensol|CAS-69-09-0|Chlorpromazine, Hydrochloride|Chlorpromazine hydrochloride, &gt;=98% (TLC)|C2481|C 8138|Propaphenin hydrochloride|69-09-0 (HCl)|NCGC00093711-02|Chlorpromazine hydrochloride [USAN:BAN:JAN]|Chloractil|CHLORPROMAZINE HYDROCHLORIDE [EP IMPURITY]|chlorpromazinhydrochlorid-|CHLORPROMAZINI HYDROCHLORIDUM [WHO-IP LATIN]|2-Chloro-10-(3-(dimethylamino)propyl)phenothiazine monohydrochloride|Phenothiazine hydrochloride|Chlorpromazine hydrochloride, meets USP testing specifications|10H-Phenothiazine-10-propanamine, 2-chloro-N,N-dimethyl-, hydrochloride (1:1)|NC00552|NCGC00093711-01|HY-B0407A|4560 Rp hydrochloride|AI3-28023|Z104477466|CHLORPROMAZINE HYDROCHLORIDE [USP-RS]|Chloropromazine hcl|Phenothiazine, 2-chloro-10-(3-(dimethylamino)propyl)-, monohydrochloride|s2456|2-Chloro-10-(3-dimethylaminopropyl)phenothiazine monohydrochloride|AKOS005111082|WLN: T C666 BN ISJ B3N1&amp;1 EG &amp;GH|CHLORPROMAZINE HYDROCHLORIDE [ORANGE BOOK]|Propaphen|MLS002222157|C-165|Fenactil monohydrochloride|10-(3-Dimethylaminopropyl)-2-chlorophenothiazine monohydrochloride|CHLORPROMAZINE HYDROCHLORIDE [JAN]|CHLORPROMAZINE HYDROCHLORIDE [WHO-IP]|[3-(2-chloro-10H-phenothiazin-10-yl)propyl]dimethylamine hydrochloride|Neurazine|Chlorpromazine Hcl|EU-0100249|69-09-0|UNII-9WP59609J6|Chlorpromazine, Hydrochloride - CAS 69-09-0|Aminazinum|BCP30284|Chlorpromazine hydrochloride, 98%|Chlorpromazini hydrochloridum|CHEBI:3649|AC-10573|Sonazine|Chlorpromazine hydrochloride [USP:BAN:JAN]|Chlorpromazine hydrochloride (JP17/USP)|D00789|Lomazine|Chlorpromazine (hydrochloride)|Chlorpromazine Hydrochloride Intensol|Chlorpromazine hydrochloride, European Pharmacopoeia (EP) Reference Standard|MLS000069401|2-Chloro-10-[3-(dimethylamino)propyl]phenothiazine monohydrochloride|CPZ (VAN)|Largaktyl|AC1LCWF1|SCHEMBL41771|Chlorpromazinium chloride|9WP59609J6|Promapar|7-[Diethylamino]coumarin-3-carbonylazide|SR-01000000012-2|Taroctyl|Opera_ID_1294|CHLOROPROMAZINE HYDROCHLORIDE|NCGC00260934-01|FT-0623715|CHLORPROMAZINE HYDROCHLORIDE [MART.]|Chlorpromazine Hydrochloride 1.0 mg/ml in Methanol (as free base)|Promacid|Chlorpromazine monohydrochloride|LS-1585|NCGC00180973-01|Hebanil|HMS1568M09|MLS-0090820.0001|Q27106159|Klorpromex|CCRIS 6221|Klorproman|Marazine|D89519|Q-200842|NSC-17479|2-Chloro-10-(3-dimethylaminopropyl)phenothiazine hydrochloride|SR-01000000012|Tox21_300517|10H-phenothiazine-10-propanamine hydrochloride, 2-chloro-N,N-dimethyl-|Unitensen|Hibanil|CHLORPROMAZINE HYDROCHLORIDE [EP MONOGRAPH]|3-(2-chlorophenothiazin-10-yl)-N,N-dimethylpropan-1-amine;hydrochloride.|Aminazinum (for the hydrochloride)|Promexin|EINECS 200-701-3|Chlorpromazine chloride|NSC226514|CHLORPROMAZINE HYDROCHLORIDE [WHO-DD]|Chlorpromazine hydrochloride, VETRANAL(TM), analytical standard|C07952|Chloropromazin hydrochloride|Ampliactil monohydrochloride|2-chloro-10-(3-dimethylaminopropyl) phenothiazine hydrochloride|Thorazine hydrochloride|EN300-20245|CCG-221553|Chlorpromazine hydrochloride|Megatil|NCI-C05210|CHLORPROMAZINE HYDROCHLORIDE [VANDF]|DTXSID7024827|FBSMERQALIEGJT-UHFFFAOYSA-N|NCGC00024409-09|CHLORPROMAZINE HYDROCHLORIDE [MI]|Tranzine|Contomin hydrochloride|CCG-220064|SW196373-5|Chloropromazine monohydrochloride|SMR000058254|FT-0665009|CHEMBL1713|NCGC00254272-01|MFCD00012654|Chlorpromazine-13C,d3 Hydrochloride|NSC17479|2-Chloro-10-[3-(dimethylamino)-1-propyl]phenothiazine Hydrochloride|Chlorpromazin-d6 hydrochloride|Norcozine|Megaphen hydrochloride|Aminazin monohydrochloride|Hybernal|Sonazine (TN)|MLS001148603|Plegomazin|Largactil monohydrochloride|10H-Phenothiazine-10-propanamine, 2-chloro-N,N-dimethyl-, monohydrochloride|3-(2-chlorophenothiazin-10-yl)-N,N-dimethylpropan-1-amine;hydrochloride|LP00249|Promachel|SR-01000000012-9|3-(2-chloro-10H-phenothiazin-10-yl)-N,N-dimethylpropan-1-amine hydrochloride|CHLORPROMAZINE HYDROCHLORIDE [GREEN BOOK]|Prestwick_58</td></tr>
+	<tr><th scope=row>43</th><td>Chlordiazepoxide hydrochloride</td><td>chemical</td><td>C16H14ClN3O.HCl|Ansiacal|Chlordiazachel|NSC-115748|Chlordiazepoxide hydrochloride [USAN:USP:BAN:JAN]|SK-Lygen|Chlordiazepoxide hydrochloride, United States Pharmacopeia (USP) Reference Standard|CHLORDIAZEPOXIDE HYDROCHLORIDE CIV|AKOS015895152|Librium|Labican|Napoton hydrochloride|Lygen|Chlorodiazepoxide hydrochloride|D00693|Clopoxide chloride|Chlordiazepoksid|NSC 115748|(1E,4E)-7-chloro-2-(methylamino)-5-phenyl-3H-benzo[e][1,4]diazepine 4-oxide hydrochloride|Psichial|Droxol hydrochloride|Chlordiazepoxide monohydrochloride|Lentotran|CHLORDIAZEPOXIDE HYDROCHLORIDE CIV [USP-RS]|Reliberan|component of Librax|Calmoden|Chlordiazepoxide hydrochloride [USAN:BAN:JAN]|MFM6K1XWDK|Librium, hydrochloride|CHLORDIAZEPOXIDE HYDROCHLORIDE [EP MONOGRAPH]|Librium (TN)|Trakipeal|Methaminodiazepine hydrochloride|Chlordiazepoxide hydrochloride (JAN/USP)|C16H14ClN3O.ClH|EINECS 207-117-8|NSC115748|CHLORDIAZEPOXIDE HYDROCHLORIDE [USP MONOGRAPH]|7-Chloro-2-(methylamino)-5-phenyl-3H-1,4-benzodiazepine 4-oxide monohydrochloride|Timosin|CHLORDIAZEPOXIDE HYDROCHLORIDE [WHO-DD]|Librium hydrochloride|C16-H14-Cl-N3-O.Cl-H|Viansin|A-Poxide|Diazachel (Obs.)|3H-1,4-Benzodiazepin-2-amine, 7-chloro-N-methyl-5-phenyl-, 4-oxide, monohydrochloride|CHEMBL1200703|Equibral|C-2992|3H-1,4-Benzodiazepine, 7-chloro-2-methylamino-5-phenyl-, 4-oxide, monohydrochloride|438-41-5|Sophiamin|Ro-5-0690|7-Chloro-2-(methylamino)-5-phenyl-3H-1,4-benzodiazepine-4-oxide hydrochloride|Chlordiazepoxide hydrochloride, European Pharmacopoeia (EP) Reference Standard|7-Chloro-2-(methylamino)-5-phenyl-3H-1, 4-oxide, hydrochloride|J-Liberty|CHLORDIAZEPOXIDE HYDROCHLORIDE [ORANGE BOOK]|Novosed|Risachief hydrochloride|CHLORDIAZEPOXIDE HYDROCHLORIDE [JAN]|Cebrum|Retcol|CHLORDIAZEPOXIDE HYDROCHLORIDE [VANDF]|SCHEMBL8935|CHEBI:3612|CHLORDIAZEPOXIDE HYDROCHLORIDE|LS-34065|Libritabs hydrochloride|CHLORDIAZEPOXIDE HYDROCHLORIDE [USP-RS]|Seren vita|Contol|Ro 5-0690|3H-1, 7-chloro-N-methyl-5-phenyl-, 4-oxide, monohydrochloride|Methaminodiazepoxide hydrochloride|CHLORDIAZEPOXIDE HYDROCHLORIDE [USAN]|WLN: T67 GN JN IHJ CG HM1 JO KR &amp;GH|UNII-MFM6K1XWDK|Chlordiazepoxide hydrochloride|7-chloro-2-(methylamino)-5-phenyl-3H-benzo[e][1,4]diazepine 4-oxide hydrochloride|CHLORDIAZEPOXIDE HYDROCHLORIDE [MART.]|7-chloro-4-hydroxy-N-methyl-5-phenyl-3H-1,4-benzodiazepin-2-imine;hydrochloride|Protensin|3H-1, 7-chloro-2-(methylamino)-5-phenyl-, 4-oxide, monohydrochloride|Chlordiazepoxide hydrochloride, drug standard, 1.0 mg/mL in methanol|Tensinyl|Benzodiapin|Q27106148|Murcil|Chloridiazepoxide hydrochloride|Chlordiazepoxide Hcl|CHLORDIAZEPOXIDE HYDROCHLORIDE [MI]</td></tr>
 </tbody>
 </table>
 
@@ -280,7 +277,6 @@ Diseases
 
 
 <table class="dataframe">
-<caption>A data.frame: 5 × 4</caption>
 <thead>
 	<tr><th scope=col>name</th><th scope=col>class</th><th scope=col>synonyms</th><th scope=col>Synonyms</th></tr>
 	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
@@ -315,7 +311,6 @@ head(R1)
 
 
 <table class="dataframe">
-<caption>A data.frame: 6 × 10</caption>
 <thead>
 	<tr><th></th><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
 	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
@@ -350,17 +345,9 @@ ggplot(R1, aes(x = npmi)) +
        y = "Count") +
   theme_minimal() +
   theme(strip.text = element_text(size = 12))  # Customize facet label size
-
 ```
-
-    Warning message:
-    “[1m[22mRemoved 10 rows containing missing values or values outside the scale range
-    (`geom_bar()`).”
-
-
-
     
-![png](001-relminer-vignette_files/001-relminer-vignette_30_1.png)
+![png](docs/001-relminer-vignette_files/001-relminer-vignette_32_1.png)
     
 
 
@@ -373,7 +360,6 @@ subset(R1,npmi>0.1)
 
 
 <table class="dataframe">
-<caption>A data.frame: 8 × 10</caption>
 <thead>
 	<tr><th></th><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
 	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
@@ -394,7 +380,7 @@ subset(R1,npmi>0.1)
 
 
 
-6. Interpretation
+### Interpretation
 There is evidence linking **dieldrin** and **buspirone** to Parkinson's disease, although the relationships are different in nature.
 
 **Dieldrin and Parkinson's Disease**:
@@ -404,3 +390,70 @@ There is evidence linking **dieldrin** and **buspirone** to Parkinson's disease,
  **Buspirone and Parkinson's Disease**:
    Buspirone is an anti-anxiety medication often prescribed for generalized anxiety disorder. It has been tested in clinical trials to assess its effectiveness in treating anxiety in Parkinson’s patients. Although buspirone has shown some efficacy in reducing anxiety in individuals with Parkinson's, its tolerability is a concern. [In a Phase II trial, 53% of patients experienced worsening motor symptoms while on buspirone, and a significant portion of patients discontinued the medication due to side effects](https://www.sciencedirect.com/science/article/abs/pii/S1353802020308117#!).
 
+
+## Get abstracts with possible relationships
+
+Now that you have identified potential relationships between chemicals and diseases (or other entities), the next step is to retrieve more detailed information, such as specific scientific articles related to these relationships. You can use the find_abstracts function to pull the PMID, title, and abstract of the relevant articles for further evaluation. This process will help you review the original research and validate the connections between the identified terms.
+
+The find_abstracts function searches through a corpus (such as PubMed) and returns a list of abstracts that contain the terms you're interested in. These abstracts provide insight into how the terms (chemicals and diseases) are discussed in the literature, allowing you to further analyze and understand the context of their relationships. The returned abstracts can then be examined for deeper relevance, quality, and importance to your research goals.
+
+In the example code below, we use the find_abstracts function to get the abstracts for dieldrin and Parkinsons.
+
+
+
+```R
+1. The terms
+```
+
+
+```R
+result <- Filter(function(i) i$name == "Dieldrin", chem_ents)
+                 
+```
+
+
+```R
+A<-result[[1]]
+B<-dis_ents[[1]]
+
+```
+
+
+```R
+2. The query
+```
+
+
+```R
+X <- find_abstracts(A,B,RM0)
+```
+
+
+```R
+3. Result
+```
+
+
+```R
+X[1:3,]
+```
+
+
+<table class="dataframe">
+<thead>
+	<tr><th></th><th scope=col>pmid</th><th scope=col>title</th><th scope=col>abstract</th></tr>
+	<tr><th></th><th scope=col>&lt;list&gt;</th><th scope=col>&lt;list&gt;</th><th scope=col>&lt;list&gt;</th></tr>
+</thead>
+<tbody>
+	<tr><th scope=row>1</th><td>22191981</td><td>Organochlorine insecticides lindane and dieldrin and their binary mixture disturb calcium homeostasis in dopaminergic PC12 cells.</td><td>Current hypotheses link long-term environmental exposure of humans to persistent organochlorine (OC) insecticides lindane (HCH) and dieldrin (HEOD) to the development of neurodegenerative disorders, such as Parkinson's disease. Primary adverse neurological effects of these insecticides are directed at inhibition of GABA(A) and glycine receptors, although GABA-independent effects have also been reported. In this paper we describe the effect of dieldrin and a binary mixture of dieldrin and lindane on a critical parameter of neuronal function and survival, i.e., intracellular calcium homeostasis. The intracellular calcium concentration ([Ca(2+)](i)) has been monitored using real-time single-cell fluorescence microscopy in dopaminergic PC12 cells loaded with the calcium-sensitive dye Fura-2. The results demonstrate that nanomolar concentrations of dieldrin time- and concentration-dependently inhibit depolarization-evoked influx of Ca(2+). Co-exposure of PC12 cells to a mixture of dieldrin and lindane revealed an additive inhibition of the depolarization-evoked increase in [Ca(2+)](i), whereas the lindane-induced increase in basal [Ca(2+)](i) is inhibited by dieldrin. The combined findings indicate that dieldrin and binary mixtures of organochlorines affect [Ca(2+)](i) already at concentrations below commonly accepted effect concentrations and close to human internal dose levels. Consequently, current findings illustrate the need to take mixtures of OC insecticides into account in human risk assessment.</td></tr>
+	<tr><th scope=row>2</th><td>18945348</td><td>Environmental neurotoxin dieldrin induces apoptosis via caspase-3-dependent proteolytic activation of protein kinase C delta (PKCdelta): Implications for neurodegeneration in Parkinson's disease.</td><td>In previous work, we investigated dieldrin cytotoxicity and signaling cell death mechanisms in dopaminergic PC12 cells. Dieldrin has been reported to be one of the environmental factors correlated with Parkinson's disease and may selectively destroy dopaminergic neurons. Here we further investigated dieldrin toxicity in a dopaminergic neuronal cell model of Parkinson's disease, namely N27 cells, using biochemical, immunochemical, and flow cytometric analyses. In this study, dieldrin-treated N27 cells underwent a rapid and significant increase in reactive oxygen species followed by cytochrome c release into cytosol. The cytosolic cytochrome c activated caspase-dependent apoptotic pathway and the increased caspase-3 activity was observed following a 3 hr dieldrin exposure in a dose-dependent manner. Furthermore, dieldrin caused the caspase-dependent proteolytic cleavage of protein kinase C delta (PKCδ) into 41 kDa catalytic and 38 kDa regulatory subunits in N27 cells as well as in brain slices. PKCδ plays a critical role in executing the apoptotic process in dieldrin-treated dopaminergic neuronal cells because pretreatment with the PKCδ inhibitor rottlerin, or transfection and over-expression of catalytically inactive PKCδ(K)³⁷⁶(R), significantly attenuates dieldrin-induced DNA fragmentation and chromatin condensation. Together, we conclude that caspase-3-dependent proteolytic activation of PKCδ is a critical event in dieldrin-induced apoptotic cell death in dopaminergic neuronal cells.</td></tr>
+	<tr><th scope=row>3</th><td>28192238</td><td>Molecular networks related to the immune system and mitochondria are targets for the pesticide dieldrin in the zebrafish (Danio rerio) central nervous system.</td><td>The objectives of this study were to determine the behavioral and molecular responses in the adult zebrafish (Danio rerio) central nervous system (CNS) following a dietary exposure to the pesticide dieldrin. Zebrafish were fed pellets spiked with 0.03, 0.15, or 1.8μg/g dieldrin for 21days. Behavioral analysis revealed no difference in exploratory behaviors or those related to anxiety. Transcriptional networks for T-cell aggregation and selection were decreased in expression suggesting an immunosuppressive effect of dieldrin, consistent with other studies investigating organochlorine pesticides. Processes related to oxidative phosphorylation were also differentially affected by dieldrin. Quantitative proteomics (iTRAQ) using a hybrid quadrupole-Orbitrap identified 226 proteins that were different following one or more doses. These proteins included ATP synthase subunits (mitochondrial) and hypoxia up-regulated protein 1 which were decreased and NADH dehydrogenases (mitochondrial) and signal recognition particle 9 which were up-regulated. Thus, proteins affected were functionally associated with the mitochondria and a protein network analysis implicated Parkinson's disease (PD) and Huntington's disease as diseases associated with altered proteins. Molecular networks related to mitochondrial dysfunction and T-cell regulation are hypothesized to underlie the association between dieldrin and PD. These data contribute to a comprehensive transcriptomic and proteomic biomarker framework for pesticide exposures and neurodegenerative diseases. Dieldrin is a persistent organochlorine pesticide that has been associated with human neurodegenerative disease such as Parkinson's disease. Dieldrin is ranked 18th on the 2015 U.S. Agency for Toxic Substances and Disease Registry and continues to be a pesticide of concern for human health. Transcriptomics and quantitative proteomics (ITRAQ) were employed to characterize the molecular networks in the central nervous system that are altered with dietary exposure to dieldrin. We found that transcriptional and protein networks related to the immune system, mitochondria, and Parkinson's disease were preferentially affected by dieldrin. The study provides new insight into the mechanisms of dieldrin neurotoxicity that may explain, in part, the association between this pesticide and increased risks to neurodegeneration. These data contribute in a significant way to developing a molecular framework for pesticide induced neurotoxicity.</td></tr>
+</tbody>
+</table>
+
+
+
+
+```R
+
+```
