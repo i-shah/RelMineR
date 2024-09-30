@@ -32,9 +32,9 @@ $$
 $$
 
 Where:
-- \( P(A, B) \) is the probability that both terms \(A\) and \(B\) occur together (co-occurrence).
-- \( P(A) \) is the probability that term \(A\) occurs.
-- \( P(B) \) is the probability that term \(B\) occurs.
+- P(A, B)  is the probability that both terms A and B occur together (co-occurrence).
+- P(A)  is the probability that term A occurs.
+- P(B)  is the probability that term B occurs.
 
 ## PMI in Terms of Document Counts
 
@@ -45,10 +45,10 @@ $$
 $$
 
 Where:
-- \(n_{AB}\) is the number of documents where both \(A\) and \(B\) occur (co-occurrence).
-- \(n_A\) is the number of documents where \(A\) occurs.
-- \(n_B\) is the number of documents where \(B\) occurs.
-- \(N\) is the total number of documents.
+- n_{AB} is the number of documents where both A and B occur (co-occurrence).
+- n_A is the number of documents where A occurs.
+- n_B is the number of documents where B occurs.
+- N is the total number of documents.
 
 ## Normalized Pointwise Mutual Information (nPMI)
 
@@ -66,15 +66,15 @@ $$
 $$
 
 Where:
-- \(P(A, B)\) is the probability of co-occurrence of \(A\) and \(B\), as defined above.
+- P(A, B) is the probability of co-occurrence of A and B, as defined above.
 
 ## Additional Notes:
 
 - PMI is positive if the two terms co-occur more often than expected by chance, negative if they co-occur less often, and zero if they are independent.
 - nPMI normalizes PMI and ranges from -1 to 1, where:
-  - \(1\) indicates perfect co-occurrence (always occur together).
-  - \(0\) indicates independence (no association).
-  - \(-1\) indicates that the terms never co-occur.
+  - 1 indicates perfect co-occurrence (always occur together).
+  - 0 indicates independence (no association).
+  - -1 indicates that the terms never co-occur.
 
 These formulas are essential when analyzing the relationship between terms using co-occurrence data.
 
@@ -98,7 +98,7 @@ These formulas are essential when analyzing the relationship between terms using
 
 devtools::install_github("https://github.com/i-shah/relminer.git")
 
-# Usage
+# Usage examples
 
 ## Relationship between any two terms 
 

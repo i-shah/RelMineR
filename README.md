@@ -33,9 +33,9 @@ $$
 $$
 
 Where:
-- \( P(A, B) \) is the probability that both terms \(A\) and \(B\) occur together (co-occurrence).
-- \( P(A) \) is the probability that term \(A\) occurs.
-- \( P(B) \) is the probability that term \(B\) occurs.
+-  P(A, B)  is the probability that both terms A and B occur together (co-occurrence).
+-  P(A)  is the probability that term A occurs.
+-  P(B)  is the probability that term B occurs.
 
 ## PMI in Terms of Document Counts
 
@@ -46,10 +46,10 @@ $$
 $$
 
 Where:
-- \(n_{AB}\) is the number of documents where both \(A\) and \(B\) occur (co-occurrence).
-- \(n_A\) is the number of documents where \(A\) occurs.
-- \(n_B\) is the number of documents where \(B\) occurs.
-- \(N\) is the total number of documents.
+- n_{AB} is the number of documents where both A and B occur (co-occurrence).
+- n_A is the number of documents where A occurs.
+- n_B is the number of documents where B occurs.
+- N is the total number of documents.
 
 ## Normalized Pointwise Mutual Information (nPMI)
 
@@ -67,21 +67,22 @@ $$
 $$
 
 Where:
-- \(P(A, B)\) is the probability of co-occurrence of \(A\) and \(B\), as defined above.
+- P(A, B) is the probability of co-occurrence of A and B, as defined above.
 
 ## Additional Notes:
 
 - PMI is positive if the two terms co-occur more often than expected by chance, negative if they co-occur less often, and zero if they are independent.
 - nPMI normalizes PMI and ranges from -1 to 1, where:
-  - \(1\) indicates perfect co-occurrence (always occur together).
-  - \(0\) indicates independence (no association).
-  - \(-1\) indicates that the terms never co-occur.
+  - 1 indicates perfect co-occurrence (always occur together).
+  - 0 indicates independence (no association).
+  - -1 indicates that the terms never co-occur.
 
+These formulas are essential when analyzing the relationship between terms using co-occurrence data.
 
 ## Select application to biomedical research 
 
 ### Stress response pathways
-[Chambers et al. (2024)](https://doi.org/10.1021/acs.chemrestox.3c00335.) have used the approach to find chemicals that induce adaptive stress response pathways (SRPs) by applying Pointwise Mutual Information (PMI) and Normalized Pointwise Mutual Information (NPMI), as described in Chambers et al. (2024). SRPs are essential for restoring cellular homeostasis following perturbation, and when disrupted beyond critical thresholds, they can lead to apoptosis, autophagy, or cellular senescence. These pathways are key indicators for therapeutic interventions and biomarkers of toxicity.
+[Chambers et al. (2024)](https://doi.org/10.1021/acs.chemrestox.3c00335) have used the approach to find chemicals that induce adaptive stress response pathways (SRPs) by applying Pointwise Mutual Information (PMI) and Normalized Pointwise Mutual Information (NPMI), as described in Chambers et al. (2024). SRPs are essential for restoring cellular homeostasis following perturbation, and when disrupted beyond critical thresholds, they can lead to apoptosis, autophagy, or cellular senescence. These pathways are key indicators for therapeutic interventions and biomarkers of toxicity.
 
 ## References
 
@@ -89,14 +90,13 @@ Where:
 
 [Bouma, Gerlof. “Normalized (Pointwise) Mutual Information in Collocation Extraction.” Proceedings of GSCL 30 (2009): 31–40.](https://www.semanticscholar.org/paper/Normalized-(pointwise)-mutual-information-in-Bouma/15218d9c029cbb903ae7c729b2c644c24994c201)
 
-[Chambers, Bryant A., Danilo Basili, Laura Word, Nancy Baker, Alistair Middleton, Richard S. Judson, and Imran Shah. “Searching for LINCS to Stress: Using Text Mining to Automate Reference Chemical Curation.” Chemical Research in Toxicology 37, no. 6 (June 17, 2024): 878–93.](https://doi.org/10.1021/acs.chemrestox.3c00335.)
+[Chambers, Bryant A., Danilo Basili, Laura Word, Nancy Baker, Alistair Middleton, Richard S. Judson, and Imran Shah. “Searching for LINCS to Stress: Using Text Mining to Automate Reference Chemical Curation.” Chemical Research in Toxicology 37, no. 6 (June 17, 2024): 878–93.](https://doi.org/10.1021/acs.chemrestox.3c00335)
+
+
+
 
 # Installation
-
-You can install the development version from GitHub:
-
-# install.packages("devtools")
-```r
+```R
 devtools::install_github("https://github.com/i-shah/relminer.git")
 ```
 
@@ -122,6 +122,8 @@ RM0 <- create_relminer(host='localhost',port = 9200,index='pubmed')
 ```R
 count_occurrences(terms = c('Cancer'),relminer = RM0)
 ```
+
+
 1522097
 
 
@@ -170,6 +172,7 @@ find_rel(gene,disease,relminer = RM0)
 
 
 <table class="dataframe">
+<caption>A data.frame: 1 × 10</caption>
 <thead>
 	<tr><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
 	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
@@ -235,6 +238,7 @@ Chems[sample(1:nrow(Chems),1),]
 
 
 <table class="dataframe">
+<caption>A data.frame: 1 × 3</caption>
 <thead>
 	<tr><th></th><th scope=col>name</th><th scope=col>class</th><th scope=col>synonyms</th></tr>
 	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
@@ -277,6 +281,7 @@ Diseases
 
 
 <table class="dataframe">
+<caption>A data.frame: 5 × 4</caption>
 <thead>
 	<tr><th scope=col>name</th><th scope=col>class</th><th scope=col>synonyms</th><th scope=col>Synonyms</th></tr>
 	<tr><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th></tr>
@@ -311,6 +316,7 @@ head(R1)
 
 
 <table class="dataframe">
+<caption>A data.frame: 6 × 10</caption>
 <thead>
 	<tr><th></th><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
 	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
@@ -345,9 +351,17 @@ ggplot(R1, aes(x = npmi)) +
        y = "Count") +
   theme_minimal() +
   theme(strip.text = element_text(size = 12))  # Customize facet label size
+
 ```
+
+    Warning message:
+    “[1m[22mRemoved 10 rows containing missing values or values outside the scale range
+    (`geom_bar()`).”
+
+
+
     
-![png](docs/001-relminer-vignette_files/001-relminer-vignette_32_1.png)
+![png](doc/001-relminer-vignette_files/001-relminer-vignette_32_1.png)
     
 
 
@@ -360,6 +374,7 @@ subset(R1,npmi>0.1)
 
 
 <table class="dataframe">
+<caption>A data.frame: 8 × 10</caption>
 <thead>
 	<tr><th></th><th scope=col>term_a</th><th scope=col>term_b</th><th scope=col>class_a</th><th scope=col>class_b</th><th scope=col>count_a</th><th scope=col>count_b</th><th scope=col>count_ab</th><th scope=col>count_docs</th><th scope=col>pmi</th><th scope=col>npmi</th></tr>
 	<tr><th></th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;chr&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;int&gt;</th><th scope=col>&lt;dbl&gt;</th><th scope=col>&lt;dbl&gt;</th></tr>
@@ -440,6 +455,7 @@ X[1:3,]
 
 
 <table class="dataframe">
+<caption>A data.frame: 3 × 3</caption>
 <thead>
 	<tr><th></th><th scope=col>pmid</th><th scope=col>title</th><th scope=col>abstract</th></tr>
 	<tr><th></th><th scope=col>&lt;list&gt;</th><th scope=col>&lt;list&gt;</th><th scope=col>&lt;list&gt;</th></tr>
