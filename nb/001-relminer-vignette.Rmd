@@ -1,9 +1,9 @@
 ---
 title: "RelMineR: Exploring Biomedical Relationships with PMI and NPMI"
-author: "Your Name"
+author: "Imran Shah"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{RelMineR: Exploring Biomedical Relationships with PMI and NPMI}
+  %\VignetteIndexEntry{RelMineR: Exploring Biomedical Relationships with Term Co-Occurrences}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -94,7 +94,7 @@ Where:
 
 - PMI is positive if the two terms co-occur more often than expected by chance, negative if they co-occur less often, and zero if they are independent.
 - nPMI normalizes PMI and ranges from -1 to 1, where:
-  - 1\) indicates perfect co-occurrence (always occur together).
+  - 1 indicates perfect co-occurrence (always occur together).
   - 0 indicates independence (no association).
   - -1 indicates that the terms never co-occur.
 
