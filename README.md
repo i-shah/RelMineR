@@ -46,10 +46,10 @@ $$
 $$
 
 Where:
-- n_{AB} is the number of documents where both A and B occur (co-occurrence).
-- n_A is the number of documents where A occurs.
-- n_B is the number of documents where B occurs.
-- N is the total number of documents.
+- $n_{AB$ is the number of documents where both A and B occur (co-occurrence).
+- $n_A$ is the number of documents where A occurs.
+- $n_B$ is the number of documents where B occurs.
+- $N$ is the total number of documents.
 
 ## Normalized Pointwise Mutual Information (nPMI)
 
@@ -82,7 +82,7 @@ These formulas are essential when analyzing the relationship between terms using
 ## Select application to biomedical research 
 
 ### Stress response pathways
-[Chambers et al. (2024)](https://doi.org/10.1021/acs.chemrestox.3c00335) have used the approach to find chemicals that induce adaptive stress response pathways (SRPs) by applying Pointwise Mutual Information (PMI) and Normalized Pointwise Mutual Information (NPMI), as described in Chambers et al. (2024). SRPs are essential for restoring cellular homeostasis following perturbation, and when disrupted beyond critical thresholds, they can lead to apoptosis, autophagy, or cellular senescence. These pathways are key indicators for therapeutic interventions and biomarkers of toxicity.
+We have used the approach to find chemicals that induce adaptive stress response pathways (SRPs) by applying Pointwise Mutual Information (PMI) and Normalized Pointwise Mutual Information (NPMI), as described in [Chambers et al. (2024)](https://doi.org/10.1021/acs.chemrestox.3c00335). SRPs are essential for restoring cellular homeostasis following perturbation, and when disrupted beyond critical thresholds, they can lead to toxicity and disease.
 
 ## References
 
@@ -90,6 +90,7 @@ These formulas are essential when analyzing the relationship between terms using
 
 [Bouma, Gerlof. “Normalized (Pointwise) Mutual Information in Collocation Extraction.” Proceedings of GSCL 30 (2009): 31–40.](https://www.semanticscholar.org/paper/Normalized-(pointwise)-mutual-information-in-Bouma/15218d9c029cbb903ae7c729b2c644c24994c201)
 
+## Citation
 [Chambers, Bryant A., Danilo Basili, Laura Word, Nancy Baker, Alistair Middleton, Richard S. Judson, and Imran Shah. “Searching for LINCS to Stress: Using Text Mining to Automate Reference Chemical Curation.” Chemical Research in Toxicology 37, no. 6 (June 17, 2024): 878–93.](https://doi.org/10.1021/acs.chemrestox.3c00335)
 
 
