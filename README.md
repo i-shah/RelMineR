@@ -46,7 +46,7 @@ $$
 $$
 
 Where:
-- $n_{AB$ is the number of documents where both A and B occur (co-occurrence).
+- $n_{AB}$ is the number of documents where both A and B occur (co-occurrence).
 - $n_A$ is the number of documents where A occurs.
 - $n_B$ is the number of documents where B occurs.
 - $N$ is the total number of documents.
@@ -90,9 +90,11 @@ We have used the approach to find chemicals that induce adaptive stress response
 
 [Bouma, Gerlof. “Normalized (Pointwise) Mutual Information in Collocation Extraction.” Proceedings of GSCL 30 (2009): 31–40.](https://www.semanticscholar.org/paper/Normalized-(pointwise)-mutual-information-in-Bouma/15218d9c029cbb903ae7c729b2c644c24994c201)
 
-## Citation
-[Chambers, Bryant A., Danilo Basili, Laura Word, Nancy Baker, Alistair Middleton, Richard S. Judson, and Imran Shah. “Searching for LINCS to Stress: Using Text Mining to Automate Reference Chemical Curation.” Chemical Research in Toxicology 37, no. 6 (June 17, 2024): 878–93.](https://doi.org/10.1021/acs.chemrestox.3c00335)
+## To cit this work
 
+For now, please use the following publication to cite this work:-
+
+[Chambers, Bryant A., Danilo Basili, Laura Word, Nancy Baker, Alistair Middleton, Richard S. Judson, and Imran Shah. “Searching for LINCS to Stress: Using Text Mining to Automate Reference Chemical Curation.” Chemical Research in Toxicology 37, no. 6 (June 17, 2024): 878–93.](https://doi.org/10.1021/acs.chemrestox.3c00335)
 
 
 
